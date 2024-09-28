@@ -10,9 +10,12 @@ export const bookSchema = z.object({
   data: z.array(
     z.object({
       chapter: z.string(),
-      questions: z.array(
-        z.union([generalQuestionSchema, multipleChoiceSchema, trueFalseSchema])
-      ),
+      questions: z.union([
+        z.array(generalQuestionSchema),
+        z.array(multipleChoiceSchema),
+        z.array(trueFalseSchema),
+      ]),
+
       title: z.string(),
     })
   ),

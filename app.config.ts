@@ -1,7 +1,7 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
 const name = process.env.APPLICATION_NAME ?? "examiner";
-const version = process.env.VERSION ?? "1.0.0";
+const version = process.env.VERSION ?? "1.0.1";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -27,7 +27,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     package: "com.syntexia.examiner",
-    versionCode: parseFloat(version),
+    // versionCode: parseFloat(version),
   },
   web: {
     bundler: "metro",

@@ -507,7 +507,7 @@
               "reference": "Hematology/Apply knowledge of fundamental biological characteristics/Leukocytes/1"
             }
           ],
-          "type": "multiple_choice"
+          "type": "MULTIPLE_CHOICE"
         }
       ],
       "title": "Basic Hematology Concepts and Laboratory Procedures"
