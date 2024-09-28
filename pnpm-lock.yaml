@@ -8,15 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@babel/runtime':
-        specifier: ^7.25.6
-        version: 7.25.6
       '@expo/vector-icons':
         specifier: ^14.0.2
         version: 14.0.3
-      '@react-native/assets-registry':
-        specifier: ^0.75.3
-        version: 0.75.3
       '@react-navigation/native':
         specifier: ^6.0.2
         version: 6.1.18(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -78,6 +72,12 @@ importers:
       '@babel/core':
         specifier: ^7.20.0
         version: 7.25.2
+      '@babel/runtime':
+        specifier: ^7.25.6
+        version: 7.25.6
+      '@react-native/assets-registry':
+        specifier: ^0.75.3
+        version: 0.75.3
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.13
@@ -908,7 +908,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.18.29':
     resolution: {integrity: sha512-X810C48Ss+67RdZU39YEO1khNYo1RmjouRV+vVe0QhMoTe8R6OA3t+XYEdwaNbJ5p/DJN7szfHfNmX2glpC7xg==}

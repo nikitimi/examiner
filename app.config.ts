@@ -19,7 +19,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   ios: {
     supportsTablet: true,
-    buildNumber: version,
+    // buildNumber: version,
   },
   android: {
     adaptiveIcon: {
