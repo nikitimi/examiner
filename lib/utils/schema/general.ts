@@ -15,7 +15,7 @@ export const generalQuestionSchema = z.object({
         answer: z.string(),
         explanation: z.string(),
       }),
-      hint: z.string(),
+      hint: z.union([z.string(), z.undefined()]),
       question: z.string(),
       reference: z.string(),
     })

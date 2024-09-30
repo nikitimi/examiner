@@ -2,7 +2,7 @@
   "author": "Robert R. Harr",
   "data": [
     {
-      "chapter": "1",
+      "chapter": "1.1",
       "questions": [
         {
           "data": [
@@ -510,7 +510,7 @@
           "type": "MULTIPLE_CHOICE"
         }
       ],
-      "title": "Basic Hematology Concepts and Laboratory Procedures"
+      "topic": "Basic Hematology Concepts and Laboratory Procedures"
     }
   ],
   "edition": "5th",

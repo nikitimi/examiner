@@ -22,3 +22,6 @@ expo-env.d.ts
 /android
 /ios
 .env
+
+# Generated files from the questions_data_formatter.sh script
+**/utils/[0-9]*.json

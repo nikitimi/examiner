@@ -15,8 +15,7 @@ export const bookSchema = z.object({
         z.array(multipleChoiceSchema),
         z.array(trueFalseSchema),
       ]),
-
-      title: z.string(),
+      topic: z.string(),
     })
   ),
   edition: z.string(),

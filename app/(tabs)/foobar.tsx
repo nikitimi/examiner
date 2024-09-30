@@ -5,11 +5,12 @@ import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import { FlatList, Image, StyleSheet } from "react-native";
-import laboratory from "@/lib/books/laboratory.json";
+import hematology1 from "@/lib/books/hematology/1.json";
 import type { Book } from "@/lib/utils/schema/book";
 import { questionTypeEnum } from "@/lib/utils/schema/questionTypeEnum";
+
 const Foobar = () => {
-  const bookDetails = laboratory as Book;
+  const bookDetails = hematology1 as Book;
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
   console.log({ bookDetails });
@@ -52,7 +53,7 @@ const Foobar = () => {
           data={bookDetails.data}
           keyExtractor={(item) => item.chapter}
           renderItem={({ item }) => {
-            const { title, chapter, questions } = item;
+            const { topic, chapter, questions } = item;
 
             function questionData() {
               return questions.flatMap(({ data, type }) => {
@@ -68,7 +69,7 @@ const Foobar = () => {
 
             return (
               <ThemedView>
-                <ThemedText>{title}</ThemedText>
+                <ThemedText>{topic}</ThemedText>
                 <ThemedText>{`Chapter ${chapter}`}</ThemedText>
                 <ThemedView>
                   <FlatList

@@ -11,7 +11,7 @@ export const trueFalseSchema = z.object({
         answer: z.boolean(),
         explanation: z.string(),
       }),
-      hint: z.string(),
+      hint: z.union([z.string(), z.undefined()]),
       question: z.string(),
       reference: z.string(),
     })
