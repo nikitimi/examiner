@@ -6,6 +6,10 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Changelogs:
 
+**v1.0.3**
+
+- Added the Hemostasis and Thrombosis see the `lib/books/hemostasis_and_thrombosis` directory for the questions and answers.
+
 **v1.0.2**
 
 - Added the `a.txt` and `q.txt` files for the answers and questions respectively as reference for using the questions_data_formatter.sh script.
