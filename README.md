@@ -6,6 +6,12 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Changelogs:
 
+**v1.0.4**
+
+- Added Immunohemalogy book see the `lib/books/immunohematology` directory for the questions and answers. limited implementation in 4.4 Testing for Antibodies due to table inclusion in some of the questions.
+- Added Immunology book see the `lib/books/immunology` directory for the questions and answers.
+- Added the `regeneratePackageJson.sh` script to recreate the `package.json` file based from the `.env`.
+
 **v1.0.3**
 
 - Added the Hemostasis and Thrombosis see the `lib/books/hemostasis_and_thrombosis` directory for the questions and answers.
@@ -25,9 +31,7 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Issues:
 
-**v1.0.2**
-
-- Add support for optional question field for images and tables. (backtrack chapter 1 hematology, look for tables and pictures).
+- Add support for optional question field for images and tables. review the 4 chapters.
 - Building the app only shows blank white screen.
 
 ---
