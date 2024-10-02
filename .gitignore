@@ -25,3 +25,9 @@ expo-env.d.ts
 
 # Generated files from the questions_data_formatter.sh script
 **/utils/[0-9]*.json
+**/utils/[0-9]
+# Partial exclusion
+**/books/microbiology/[2-9].json
+**/books/microbiology/10.json
+**/books/microbiology/11.json
+**/books/microbiology/12.json

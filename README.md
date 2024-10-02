@@ -6,6 +6,10 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Changelogs:
 
+**v1.0.5**
+
+- Partial implementation of Laboratory Operations
+
 **v1.0.4**
 
 - Added Immunohemalogy book see the `lib/books/immunohematology` directory for the questions and answers. limited implementation in 4.4 Testing for Antibodies due to table inclusion in some of the questions.
@@ -33,6 +37,14 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 - Add support for optional question field for images and tables. review the 4 chapters.
 - Building the app only shows blank white screen.
+
+# Others:
+
+- Remove whitespace and newlines using RegEx
+
+```RegEx
+   \[\n]+[ ]*\
+```
 
 ---
 
