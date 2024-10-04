@@ -27,7 +27,7 @@ expo-env.d.ts
 **/utils/[0-9]*.json
 **/utils/[0-9]
 # Partial exclusion
-**/books/microbiology/[3-9].json
+**/books/microbiology/[6-9].json
 **/books/microbiology/10.json
 **/books/microbiology/11.json
 **/books/microbiology/12.json

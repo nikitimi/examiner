@@ -9,6 +9,7 @@ I chose examiner as the initial name of the projet referencing the street that I
 **v1.0.5**
 
 - Partial implementation of Laboratory Operations
+- Partial implementation of 8.4 Miscellaneous and Fastidious Gram-Negative Rods due to tabularization of question.
 
 **v1.0.4**
 
