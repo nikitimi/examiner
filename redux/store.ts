@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import questionReducer from "@/redux/reducers/questionReducer";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import onboardingReducer from "@/redux/reducers/onboardingReducer";
+import questionReducer from "@/redux/reducers/questionReducer";
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-
-// Inferred state type: {todos: TodosState, counter: CounterState}
+// Inferred state type example:
+// {todos: TodosState, counter: CounterState}
 export type RootState = ReturnType<typeof store.getState>;
 
 // Inferred dispatch type: Dispatch & ThunkDispatch<RootState, undefined, UnknownAction>
@@ -16,5 +16,6 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const store = configureStore({
   reducer: {
     question: questionReducer,
+    onboarding: onboardingReducer,
   },
 });

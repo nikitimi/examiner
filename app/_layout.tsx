@@ -8,7 +8,6 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { RootSiblingParent } from "react-native-root-siblings";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/redux/store";
@@ -36,12 +35,10 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <RootSiblingParent>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </RootSiblingParent>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
       </ThemeProvider>
     </Provider>
   );

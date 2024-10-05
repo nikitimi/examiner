@@ -10,8 +10,9 @@ import {
   Text,
   FlatList,
   Pressable,
+  ToastAndroid,
+  Platform,
 } from "react-native";
-import Toast from "react-native-root-toast";
 import { Collapsible } from "@/components/Collapsible";
 import { questionTypeEnum } from "@/lib/utils/schema/questionTypeEnum";
 import { useRouter } from "expo-router";
@@ -37,9 +38,9 @@ const Foobar = () => {
   // END OF REDUX
 
   function toastPressed() {
-    Toast.show("hello", {
-      duration: 300,
-    });
+    if (Platform.OS === "android") {
+      ToastAndroid.show("hello", ToastAndroid.LONG);
+    }
     setTimeout(() => {
       router.replace("/");
     }, 1000);
@@ -126,12 +127,12 @@ const Foobar = () => {
                     const { question, correctAnswer, choices } = item;
 
                     function validateAnswer(choice: string) {
-                      Toast.show(
-                        choice === correctAnswer.answer ? "green" : "red",
-                        {
-                          duration: 300,
-                        }
-                      );
+                      if (Platform.OS === "android") {
+                        ToastAndroid.show(
+                          choice === correctAnswer.answer ? "green" : "red",
+                          ToastAndroid.LONG
+                        );
+                      }
                     }
 
                     return (

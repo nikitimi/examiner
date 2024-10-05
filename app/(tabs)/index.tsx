@@ -1,17 +1,27 @@
 import { Pressable, StyleSheet } from "react-native";
 
-import { useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { routeHelper, routes } from "@/lib/utils/route";
+import Welcome from "@/components/onboarding/Welcome";
+import { useAppRouter } from "@/hooks/useAppRouter";
 
 export default function HomeScreen() {
-  const router = useRouter();
+  const router = useAppRouter();
 
   return (
     <ThemedView style={styles.titleContainer}>
-      <Pressable onPress={() => router.push("/foobar")}>
-        <ThemedText>Foobar</ThemedText>
-      </Pressable>
+      <Welcome />
+      {routes.map((route) => {
+        return (
+          <Pressable
+            key={route}
+            onPress={() => router.push(routeHelper(route))}
+          >
+            <ThemedText>{route}</ThemedText>
+          </Pressable>
+        );
+      })}
     </ThemedView>
   );
 }

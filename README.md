@@ -6,6 +6,10 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Changelogs:
 
+**v1.0.7**
+
+- Remove toast from 'react-native-root-toast' and 'react-native-root-siblings' because it is not working.
+
 **v1.0.6**
 
 - Added Redux as the state management for the application.
