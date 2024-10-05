@@ -6,20 +6,17 @@ import hematology5 from "@/lib/books/hematology/5.json";
 import hematology6 from "@/lib/books/hematology/6.json";
 import hematology7 from "@/lib/books/hematology/7.json";
 import hematology8 from "@/lib/books/hematology/8.json";
-import type { Book } from "@/lib/utils/schema/book";
+import type { MultipleChoiceBook } from "@/lib/utils/schema/book";
 
-export function useHematology() {
-  return [
-    hematology1 as Book,
-    hematology2 as Book,
-    hematology3 as Book,
-    hematology4 as Book,
-    // TODO: Fix type inference,
-    // temporary solution.
-    //             vvvvvvv
-    hematology5 as unknown as Book,
-    hematology6 as Book,
-    hematology7 as Book,
-    hematology8 as Book,
-  ];
-}
+const hematology = [
+  hematology1,
+  hematology2,
+  hematology3,
+  hematology4,
+  hematology5,
+  hematology6,
+  hematology7,
+  hematology8,
+] as MultipleChoiceBook[];
+
+export default hematology;

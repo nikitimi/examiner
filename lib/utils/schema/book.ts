@@ -3,21 +3,40 @@ import { multipleChoiceSchema } from "./multipleChoice";
 import { generalQuestionSchema } from "./general";
 import { trueFalseSchema } from "./trueFalse";
 
-export type Book = z.infer<typeof bookSchema>;
+export type MultipleChoiceBook = z.infer<typeof multipleChoiceBookSchema>;
+export type GeneralQuestionBook = z.infer<typeof generalQuestionBookSchema>;
+export type TrueFalseBook = z.infer<typeof trueFalseBookSchema>;
 
-export const bookSchema = z.object({
+const bookSchema = z.object({
   author: z.string(),
+  edition: z.string(),
+  title: z.string(),
+});
+
+export const multipleChoiceBookSchema = bookSchema.extend({
   data: z.array(
     z.object({
       chapter: z.string(),
-      questions: z.union([
-        z.array(generalQuestionSchema),
-        z.array(multipleChoiceSchema),
-        z.array(trueFalseSchema),
-      ]),
+      questions: z.array(multipleChoiceSchema),
       topic: z.string(),
     })
   ),
-  edition: z.string(),
-  title: z.string(),
+});
+export const generalQuestionBookSchema = bookSchema.extend({
+  data: z.array(
+    z.object({
+      chapter: z.string(),
+      questions: z.array(generalQuestionSchema),
+      topic: z.string(),
+    })
+  ),
+});
+export const trueFalseBookSchema = bookSchema.extend({
+  data: z.array(
+    z.object({
+      chapter: z.string(),
+      questions: z.array(trueFalseSchema),
+      topic: z.string(),
+    })
+  ),
 });

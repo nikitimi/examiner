@@ -6,6 +6,10 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Changelogs:
 
+**v1.0.6**
+
+- Added Redux as the state management for the application.
+
 **v1.0.5**
 
 - Partial implementation of Laboratory Operations
@@ -36,8 +40,9 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Issues:
 
-- Add support for optional question field for images and tables. review the 4 chapters.
-- Building the app only shows blank white screen.
+- Button responsiveness is very poor, suspecting Conditional styling, needs more reproduction.
+- Add support for optional question field for images and tables.
+- ~~Building the app only shows blank white screen.~~ Solved in `ae16a55fe98973c0773b8dd9af6db6b1b63f1114`
 
 # Others:
 

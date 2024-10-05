@@ -1,76 +1,49 @@
-import { Collapsible } from "@/components/Collapsible";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
-import React, { useState } from "react";
+import React from "react";
 import {
-  FlatList,
   Image,
-  Pressable,
+  TouchableOpacity,
   StyleSheet,
   Text,
-  ToastAndroid,
+  FlatList,
+  Pressable,
 } from "react-native";
+import Toast from "react-native-root-toast";
+import { Collapsible } from "@/components/Collapsible";
 import { questionTypeEnum } from "@/lib/utils/schema/questionTypeEnum";
-import type { Book } from "@/lib/utils/schema/book";
-// import { useHematology } from "@/hooks/bookHelper/useHematology";
+import { useRouter } from "expo-router";
+import { useAppDispatch, type RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { setCurrentItemIndex } from "@/redux/reducers/questionReducer";
 
 const Foobar = () => {
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  // const hematology = useHematology();
-  const hematology: Book[] = [
-    {
-      author: "John Doe",
-      title: "The Art of Programming",
-      edition: "1st Edition",
-      data: [
-        {
-          chapter: "",
-          questions: [
-            {
-              type: "TRUE_FALSE",
-              data: [
-                {
-                  choices: [true, false],
-                  question: "Is Paris the capital of France?",
-                  correctAnswer: {
-                    answer: true,
-                    explanation: "Paris is the capital of France.",
-                  },
-                  reference: "https://en.wikipedia.org/wiki/Paris",
-                  hint: "The city is known for its art, culture, and history.",
-                },
-              ],
-            },
-          ],
-          topic: "Hello Paris",
-        },
-      ],
-    },
-  ];
-  const [stateIndex, setIndex] = useState(0);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  // const [state, setState] = useState({
-  //   buttonStyle: styles.Button,
-  // });
+  // ALL ABOUT REDUX
+  const { currentItemIndex, itemsLimit, selectedBook } = useSelector(
+    (state: RootState) => state.question
+  );
+  const bookData = useSelector(
+    (state: RootState) =>
+      state.question.bookData.filter(
+        ({ displayName }) => displayName === selectedBook
+      )[0].list
+  );
+  // END OF REDUX
 
-  // function toggleButtonColor() {
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     buttonStyle:
-  //       prevState.buttonStyle.color === styles.Button.color
-  //         ? styles.ButtonActive
-  //         : styles.Button,
-  //   }));
-  // }
-
-  // function handleButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
-  //   toggleButtonColor();
-  //   console.log("first");
-  //   console.log(StyleSheetList.length);
-  //   setTimeout(() => toggleButtonColor(), 300);
-  // }
+  function toastPressed() {
+    Toast.show("hello", {
+      duration: 300,
+    });
+    setTimeout(() => {
+      router.replace("/");
+    }, 1000);
+  }
 
   return (
     <ParallaxScrollView
@@ -86,41 +59,41 @@ const Foobar = () => {
       }
     >
       <ThemedView>
-        <Pressable
-          onPress={() => ToastAndroid.show("hello", ToastAndroid.LONG)}
-        >
+        <TouchableOpacity onPress={toastPressed}>
           <Text style={{ color: "white" }}>hello</Text>
-        </Pressable>
+        </TouchableOpacity>
       </ThemedView>
       <FlatList
         horizontal
-        data={new Array(hematology.length).fill(0)}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={(value) => {
+        data={new Array(bookData.length).fill(0).map((v, i) => i)}
+        keyExtractor={(item) => item.toString()}
+        renderItem={({ item }) => {
+          const isActive = item === currentItemIndex;
           return (
-            <Pressable
-              style={
-                stateIndex === value.index
-                  ? styles.LengthButtonActive
-                  : styles.LengthButton
-              }
+            <TouchableOpacity
+              key={item}
+              style={[
+                common.LengthButton,
+                isActive ? styles.LengthButtonActive : styles.LengthButton,
+              ]}
             >
               <Text
                 style={
-                  stateIndex === value.index
+                  isActive
                     ? styles.LengthButtonTextActive
                     : styles.LengthButtonText
                 }
-                onPress={() => setIndex(value.index)}
+                onPress={() => dispatch(setCurrentItemIndex(item))}
               >
-                {value.index + 1}
+                {item + 1}
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         }}
       />
+      <ThemedText>{`${currentItemIndex}`}</ThemedText>
       <FlatList
-        data={hematology[stateIndex].data.filter((v, i) => i < 10)}
+        data={bookData[currentItemIndex].data}
         keyExtractor={(item) => item.chapter}
         renderItem={({ item }) => {
           const { topic, chapter, questions } = item;
@@ -129,7 +102,12 @@ const Foobar = () => {
             return questions.flatMap(({ data, type }) => {
               switch (type) {
                 case questionTypeEnum.enum.MULTIPLE_CHOICE:
-                  return data;
+                  const finalLimit = currentItemIndex + itemsLimit;
+
+                  return data.slice(
+                    currentItemIndex,
+                    finalLimit > data.length ? data.length : finalLimit
+                  );
                 default:
                   return [];
               }
@@ -147,6 +125,15 @@ const Foobar = () => {
                   renderItem={({ item }) => {
                     const { question, correctAnswer, choices } = item;
 
+                    function validateAnswer(choice: string) {
+                      Toast.show(
+                        choice === correctAnswer.answer ? "green" : "red",
+                        {
+                          duration: 300,
+                        }
+                      );
+                    }
+
                     return (
                       <ThemedView style={{ paddingTop: 40 }}>
                         <Collapsible title={question}>
@@ -160,10 +147,27 @@ const Foobar = () => {
                           data={choices}
                           keyExtractor={(choice) => choice}
                           renderItem={({ item: choice, index }) => (
-                            <ThemedView>
-                              <ThemedText>{`${alphabet[
-                                index
-                              ].toLocaleUpperCase()}. ${choice}`}</ThemedText>
+                            <ThemedView
+                              style={{
+                                flexDirection: "row",
+                                gap: 12,
+                                alignItems: "center",
+                              }}
+                            >
+                              <Pressable
+                                style={{
+                                  borderWidth: 2,
+                                  borderColor: "white",
+                                  padding: 8,
+                                  borderRadius: 8,
+                                }}
+                                onPress={() => validateAnswer(choice)}
+                              >
+                                <ThemedText>
+                                  {alphabet[index].toLocaleUpperCase()}.
+                                </ThemedText>
+                              </Pressable>
+                              <ThemedText>{`${choice}`}</ThemedText>
                             </ThemedView>
                           )}
                         />
@@ -191,24 +195,19 @@ const common = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 8,
     padding: 8,
-    width: 60,
-    margin: 8,
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
   },
 });
 const styles = StyleSheet.create({
   LengthButtonActive: {
-    ...common.LengthButton,
     borderColor: "#2f5",
   },
   LengthButtonTextActive: { color: "#2f5" },
   LengthButtonText: { color: "white" },
   LengthButton: {
-    ...common.LengthButton,
     borderColor: "white",
   },
+
   Paragraph: {
     color: Colors.dark.text,
   },
