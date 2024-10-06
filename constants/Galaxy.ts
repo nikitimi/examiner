@@ -1,0 +1,15 @@
+export const galaxyNames = [
+  "sirius",
+  "acamar",
+  "alcyone",
+  "altair",
+  "andromeda",
+  "antares",
+  "aquila",
+  "ara",
+  "aster",
+  "canopus",
+  "cassiopeia",
+  "castor",
+  "orion",
+] as const;

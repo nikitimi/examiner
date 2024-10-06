@@ -42,6 +42,14 @@ I chose examiner as the initial name of the projet referencing the street that I
 - Added the schema for the books and questions located in the `lib/utils/schema` directory.
 - Moved from `npm` to `pnpm` as the main package manager.
 
+# Todo:
+
+**07/10/2024**
+
+- Need to add logic handler to show on boarding message on first view of the app, check the `onboardingReducer`.
+- a `localStorage` API for persisting state such as themes, and on boarding message.
+- Sort properties alphabetically.
+
 # Issues:
 
 - Button responsiveness is very poor, suspecting Conditional styling, needs more reproduction.
