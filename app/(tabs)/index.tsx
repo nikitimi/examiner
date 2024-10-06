@@ -1,10 +1,4 @@
-import {
-  Image,
-  Modal,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -14,7 +8,7 @@ import { randomMinMax } from "@/lib/utils/random";
 import { galaxyNames } from "@/constants/Galaxy";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   setMeasurement,
   setSpotlightVisibility,
@@ -43,7 +37,7 @@ export default function HomeScreen() {
       );
       dispatch(setSpotlightVisibility({ isVisible: true, title }));
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <ThemedView style={styles.parentContainer}>

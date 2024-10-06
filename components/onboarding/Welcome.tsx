@@ -1,7 +1,5 @@
-import { StyleSheet, View, Text, Modal, TouchableOpacity } from "react-native";
 import React from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { setIsOnboardingComplete } from "@/redux/reducers/onboardingReducer";
+import { useAppSelector } from "@/redux/store";
 import Spotlight from "./Spotlight";
 
 /**
