@@ -1,5 +1,6 @@
 import { type Href, Tabs, usePathname } from "expo-router";
 import React from "react";
+import { StyleSheet } from "react-native";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { BLACK, Colors, WHITE } from "@/constants/Colors";
@@ -48,34 +49,23 @@ export default function TabLayout() {
                     isActiveRoute ? route.icons.active : route.icons.inactive
                   }
                   size={isActiveRoute ? 24 : 22}
+                  style={[
+                    textIconColor,
+                    isActiveRoute
+                      ? styles.activeTabBarIconStyle
+                      : styles.tabBarIconStyle,
+                    { borderColor: `${themeColor}99` },
+                  ]}
                 />
               ),
-              tabBarStyle: {
-                display: isRouteExcludedInTabs ? "none" : "flex",
-                backgroundColor: BLACK,
-                borderTopColor: `${themeColor}33`,
-              },
-              tabBarLabelStyle: [
+              tabBarStyle: [
+                styles.tabBarStyle,
                 {
-                  textTransform: "capitalize",
+                  display: isRouteExcludedInTabs ? "none" : "flex",
+                  borderTopColor: `${themeColor}33`,
                 },
-                textIconColor,
               ],
-              tabBarIconStyle: [
-                textIconColor,
-                isActiveRoute
-                  ? {
-                      backgroundColor: BLACK,
-                      borderWidth: 2,
-                      borderColor: `${themeColor}99`,
-                      width: 42,
-                      height: 42,
-                      borderRadius: 100,
-                      position: "absolute",
-                      top: -10,
-                    }
-                  : {},
-              ],
+              tabBarLabelStyle: [styles.tabBarLabelStyle, textIconColor],
               title: isActiveRoute ? finalRouteName.replace(/_/g, " ") : "",
             }}
           />
@@ -84,3 +74,25 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBarStyle: {
+    backgroundColor: BLACK,
+  },
+  tabBarLabelStyle: {
+    textTransform: "capitalize",
+  },
+  tabBarIconStyle: {},
+  activeTabBarIconStyle: {
+    backgroundColor: BLACK,
+    borderWidth: 2,
+    width: 42,
+    height: 42,
+    borderRadius: 100,
+    position: "absolute",
+    textAlign: "center",
+    verticalAlign: "middle",
+    zIndex: 0,
+    top: -10,
+  },
+});

@@ -1,23 +1,18 @@
-import {
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
+import { useRef } from "react";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Welcome from "@/components/onboarding/Welcome";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { galaxyNames } from "@/constants/Galaxy";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { randomMinMax } from "@/lib/utils/random";
-import { galaxyNames } from "@/constants/Galaxy";
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useEffect, useRef } from "react";
 import {
   setMeasurement,
   setSpotlightVisibility,
 } from "@/redux/reducers/onboardingReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 export default function HomeScreen() {
   const router = useAppRouter();
@@ -25,24 +20,6 @@ export default function HomeScreen() {
   const themeColor = useAppSelector((s) => s.theme.themeColor);
   const settingRef = useRef<TouchableOpacity>(null!);
   const dispatch = useAppDispatch();
-  const dimension = useWindowDimensions();
-
-  useEffect(() => {
-    const title = "settings_button";
-    settingRef.current.measure((x, y, width, height, pageX, pageY) => {
-      console.log(pageX, pageY);
-      dispatch(
-        setMeasurement({
-          title,
-          left: pageX,
-          top: pageY,
-          width,
-          height,
-        })
-      );
-      dispatch(setSpotlightVisibility({ isVisible: true, title }));
-    });
-  }, [dispatch, dimension.height, dimension.width]);
 
   return (
     <ThemedView style={styles.parentContainer}>
@@ -60,6 +37,21 @@ export default function HomeScreen() {
         <TouchableOpacity
           ref={settingRef}
           style={styles.settings}
+          onLayout={async (event) => {
+            const title = "settings_button";
+            const { width, height, x, y } = event.nativeEvent.layout;
+
+            dispatch(
+              setMeasurement({
+                title,
+                width: width,
+                height: height,
+                left: x,
+                top: y,
+              })
+            );
+            dispatch(setSpotlightVisibility({ isVisible: true, title }));
+          }}
           onPress={() => router.push("/profile")}
         >
           <TabBarIcon name="settings" color={themeColor} />

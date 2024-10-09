@@ -1,10 +1,8 @@
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import {
-  Image,
   TouchableOpacity,
   StyleSheet,
   Text,
@@ -12,6 +10,7 @@ import {
   Pressable,
   ToastAndroid,
   Platform,
+  View,
 } from "react-native";
 import { Collapsible } from "@/components/Collapsible";
 import { questionTypeEnum } from "@/lib/utils/schema/questionTypeEnum";
@@ -47,18 +46,7 @@ const Foobar = () => {
   }
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{
-        dark: "#808",
-        light: "#f97",
-      }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/adaptive-icon.png")}
-          style={styles.Logo}
-        />
-      }
-    >
+    <View>
       <ThemedView>
         <TouchableOpacity onPress={toastPressed}>
           <Text style={{ color: "white" }}>hello</Text>
@@ -181,7 +169,7 @@ const Foobar = () => {
           );
         }}
       />
-    </ParallaxScrollView>
+    </View>
   );
 };
 
