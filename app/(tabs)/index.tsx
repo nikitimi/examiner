@@ -1,4 +1,9 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -20,7 +25,7 @@ export default function HomeScreen() {
   const themeColor = useAppSelector((s) => s.theme.themeColor);
   const settingRef = useRef<TouchableOpacity>(null!);
   const dispatch = useAppDispatch();
-  // const settingRef = useRef<TouchableOpacity>(null!);
+  const dimension = useWindowDimensions();
 
   useEffect(() => {
     const title = "settings_button";
@@ -37,7 +42,7 @@ export default function HomeScreen() {
       );
       dispatch(setSpotlightVisibility({ isVisible: true, title }));
     });
-  }, [dispatch]);
+  }, [dispatch, dimension.height, dimension.width]);
 
   return (
     <ThemedView style={styles.parentContainer}>
