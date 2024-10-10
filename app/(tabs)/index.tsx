@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -18,7 +18,7 @@ export default function HomeScreen() {
   const router = useAppRouter();
   const galaxyIndex = randomMinMax(0, galaxyNames.length - 1);
   const themeColor = useAppSelector((s) => s.theme.themeColor);
-  const settingRef = useRef<TouchableOpacity>(null!);
+  const settingRef = useRef<View>(null!);
   const dispatch = useAppDispatch();
   // const settingRef = useRef<TouchableOpacity>(null!);
 
