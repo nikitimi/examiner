@@ -52,6 +52,7 @@ I chose examiner as the initial name of the projet referencing the street that I
 
 # Issues:
 
+- `onLayout` attribute is returning inaccurate measurement of the element in android development, tested in the react-native reproduction app but the measurements there are accurate, currently deducing that the measurement is inaccurate because of the dispatch event, but it is unlikely.
 - Button responsiveness is very poor, suspecting Conditional styling, needs more reproduction.
 - Add support for optional question field for images and tables.
 - ~~Building the app only shows blank white screen.~~ Solved in `ae16a55fe98973c0773b8dd9af6db6b1b63f1114`
