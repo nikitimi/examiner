@@ -3,21 +3,20 @@ import React from "react";
 import { StyleSheet } from "react-native";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { BLACK, Colors, WHITE } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { BLACK, WHITE } from "@/constants/Colors";
 import { routeHelper, type RouteNames, routes } from "@/lib/utils/route";
-import { useAppSelector } from "@/redux/store";
+import useThemeColor from "@/hooks/useThemeColor";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const pathName = usePathname();
   const excludedRoutes: RouteNames[] = ["profile"];
-  const themeColor = useAppSelector((s) => s.theme.themeColor);
+  const { themeColor, themeMode } = useThemeColor();
+  const isThemeModeDark = themeMode === "dark";
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: themeColor,
         headerShown: false,
       }}
     >
@@ -30,9 +29,9 @@ export default function TabLayout() {
         const isActiveRoute = pathName === computedRoute;
         const textIconColor = isActiveRoute
           ? {
-              color: `${themeColor}FF`,
+              color: isThemeModeDark ? `${themeColor}FF` : BLACK,
             }
-          : { color: `${WHITE}99` };
+          : { color: isThemeModeDark ? `${WHITE}99` : `${BLACK}99` };
         const isRouteExcludedInTabs = excludedRoutes.includes(route.name);
 
         return (
@@ -54,13 +53,21 @@ export default function TabLayout() {
                     isActiveRoute
                       ? styles.activeTabBarIconStyle
                       : styles.tabBarIconStyle,
-                    { borderColor: `${themeColor}99` },
+                    {
+                      borderColor: isThemeModeDark
+                        ? `${themeColor}99`
+                        : `${BLACK}99`,
+                      backgroundColor: isThemeModeDark
+                        ? BLACK
+                        : `${themeColor}99`,
+                    },
                   ]}
                 />
               ),
               tabBarStyle: [
                 styles.tabBarStyle,
                 {
+                  backgroundColor: isThemeModeDark ? BLACK : themeColor,
                   display: isRouteExcludedInTabs ? "none" : "flex",
                   borderTopColor: `${themeColor}33`,
                 },
@@ -76,15 +83,12 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  tabBarStyle: {
-    backgroundColor: BLACK,
-  },
+  tabBarStyle: {},
   tabBarLabelStyle: {
     textTransform: "capitalize",
   },
   tabBarIconStyle: {},
   activeTabBarIconStyle: {
-    backgroundColor: BLACK,
     borderWidth: 2,
     width: 42,
     height: 42,

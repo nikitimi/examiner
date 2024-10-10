@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import debugMessage from "./debugMessage";
 
 type StoreStorageData<T> = {
   key: string;
@@ -26,14 +27,18 @@ export async function storeStorageData<T>(props: StoreStorageData<T>) {
   switch (method) {
     case "set":
       await AsyncStorage.setItem(key, finalValue);
-      return `Successfully added ${key} in local storage!`;
+      debugMessage(`Successfully added ${key} in local storage!`);
+      return finalValue;
 
     case "update":
       const data = await deleteGetStorageData({ key, method: "get" });
 
       if (data === null) return `Key ${key} is not found!`;
       await AsyncStorage.setItem(key, finalValue);
-      return `Successfully change the value of ${key} in local storage to ${value}!`;
+      debugMessage(
+        `Successfully change the value of ${key} in local storage to ${value}!`
+      );
+      return finalValue;
 
     default:
       return "No store method used.";

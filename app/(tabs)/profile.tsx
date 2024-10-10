@@ -2,13 +2,12 @@ import { StyleSheet, TouchableOpacity, Modal } from "react-native";
 import React, { useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
-import { BLACK, themeColors, type ThemeColors } from "@/constants/Colors";
+import { BLACK, ThemeColor, themeColors, WHITE } from "@/constants/Colors";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { ThemedView } from "@/components/ThemedView";
 import { FlatList } from "react-native-gesture-handler";
-import { setThemeColor } from "@/redux/reducers/themeReducer";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import useThemeColor from "@/hooks/useThemeColor";
 
 type InitialState = {
   isThemeColorModalVisible: boolean;
@@ -20,24 +19,20 @@ const initialState: InitialState = {
 const Profile = () => {
   const router = useAppRouter();
   const [state, setState] = useState(initialState);
-  const dispatch = useAppDispatch();
-  const themeColor = useAppSelector((s) => s.theme.themeColor);
+  const { themeColor, themeMode, syncTheme } = useThemeColor();
+  const isThemeModeDark = themeMode === "dark";
+  // function login() {}
 
-  function login() {}
-
+  /** These is for setting the theme colors Modal View. */
   function toggleThemeColors(state: "close" | "open") {
     setState((prevState) => ({
       ...prevState,
       isThemeColorModalVisible: state === "open" ? true : false,
     }));
   }
-
-  function selectThemeColor(themeColor: ThemeColors) {
-    setState((prevState) => ({
-      ...prevState,
-      isThemeColorModalVisible: false,
-    }));
-    dispatch(setThemeColor(themeColor));
+  function setThemeColor(color: ThemeColor) {
+    syncTheme("color", color);
+    toggleThemeColors("close");
   }
 
   return (
@@ -53,8 +48,21 @@ const Profile = () => {
           <ThemedText style={[styles.loginInfo, { color: BLACK }]}>
             Login to sync your settings, and scoreboard history in the cloud.
           </ThemedText>
-          <TouchableOpacity style={styles.loginButton} onPress={login}>
-            <ThemedText style={[styles.text, { color: themeColor }]}>
+          <TouchableOpacity
+            style={[
+              styles.loginButton,
+              {
+                backgroundColor: isThemeModeDark ? BLACK : themeColor,
+              },
+            ]}
+            // onPress={login}
+          >
+            <ThemedText
+              style={[
+                styles.text,
+                { color: isThemeModeDark ? themeColor : BLACK },
+              ]}
+            >
               Login
             </ThemedText>
           </TouchableOpacity>
@@ -74,8 +82,15 @@ const Profile = () => {
           Choose Theme Color
         </ThemedText>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.themeButton, { borderColor: themeColor }]}
+        onPress={() => syncTheme("mode", isThemeModeDark ? "light" : "dark")}
+      >
+        <ThemedText style={[styles.text, { color: themeColor }]}>
+          Toggle Theme Mode
+        </ThemedText>
+      </TouchableOpacity>
 
-      {/* Theme Color Modal */}
       <Modal
         visible={state.isThemeColorModalVisible}
         transparent
@@ -88,7 +103,13 @@ const Profile = () => {
         >
           <TouchableOpacity
             activeOpacity={1}
-            style={[styles.modalContainer, { borderColor: themeColor }]}
+            style={[
+              styles.modalContainer,
+              {
+                borderColor: themeColor,
+                backgroundColor: isThemeModeDark ? BLACK : WHITE,
+              },
+            ]}
           >
             <ThemedText style={styles.text}>Accent Color:</ThemedText>
             <FlatList
@@ -96,11 +117,14 @@ const Profile = () => {
               contentContainerStyle={styles.modalContentContainer}
               data={themeColors}
               keyExtractor={(item) => item}
-              renderItem={({ item }) => {
+              renderItem={(color) => {
                 return (
                   <TouchableOpacity
-                    onPress={() => selectThemeColor(item)}
-                    style={[styles.themeColorButton, { backgroundColor: item }]}
+                    onPress={() => setThemeColor(color.item)}
+                    style={[
+                      styles.themeColorButton,
+                      { backgroundColor: color.item },
+                    ]}
                   />
                 );
               }}
@@ -136,7 +160,6 @@ const styles = StyleSheet.create({
     ...common.roundedComponent,
     width: "90%",
     marginHorizontal: "auto",
-    backgroundColor: BLACK,
   },
   themeButton: {
     ...common.roundedComponent,
@@ -163,7 +186,6 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     width: "90%",
     ...common.roundedComponent,
-    backgroundColor: BLACK,
   },
   text: {
     textAlign: "center",

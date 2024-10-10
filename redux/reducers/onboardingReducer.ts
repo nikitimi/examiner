@@ -1,4 +1,4 @@
-import type { SpotlightProps } from "@/components/onboarding/Spotlight";
+import { type SpotlightProps } from "@/components/onboarding/Spotlight";
 import { createSlice } from "@reduxjs/toolkit";
 
 type InitialState = {
@@ -14,8 +14,8 @@ const initialState: InitialState = {
       left: 0,
       messages: [
         "Sync your data by logging in...",
-        "customize your theme...",
-        "and contact the developer in the settings.",
+        "Customize your theme...",
+        "Lastly contact the developer in the settings.",
       ],
       title: "settings_button",
       top: 0,
@@ -43,12 +43,29 @@ const onboardingSlice = createSlice({
   name: "onboarding",
   initialState,
   reducers: {
-    setIsOnboardingComplete: (
+    updateOnboardingStatus: (
       state,
-      action: { payload: InitialState["onBoardingStatus"][number] }
+      action: {
+        payload: {
+          value: InitialState["onBoardingStatus"][number];
+          method: "delete" | "push";
+        };
+      }
     ) => {
-      // Maybe add `Set` method for producing unique array values.
-      state.onBoardingStatus.push(action.payload);
+      switch (action.payload.method) {
+        case "delete":
+          state.onBoardingStatus.splice(
+            state.onBoardingStatus.indexOf(action.payload.value),
+            1
+          );
+          break;
+        case "push":
+          // Maybe add `Set` method for producing unique array values.
+          if (!state.onBoardingStatus.includes(action.payload.value)) {
+            state.onBoardingStatus.push(action.payload.value);
+          }
+          break;
+      }
     },
     setMeasurement: (
       state,
@@ -110,7 +127,7 @@ const onboardingSlice = createSlice({
 });
 
 export const {
-  setIsOnboardingComplete,
+  updateOnboardingStatus,
   setMeasurement,
   setMessageIndex,
   setSpotlightVisibility,

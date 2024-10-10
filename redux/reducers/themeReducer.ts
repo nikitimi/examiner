@@ -1,12 +1,15 @@
-import type { ThemeColors } from "@/constants/Colors";
+import type { ThemeColor, ThemeMode } from "@/constants/Colors";
 import { createSlice } from "@reduxjs/toolkit";
+import { GREEN } from "@/constants/Colors";
 
 type InitialState = {
-  themeColor: ThemeColors;
+  themeColor: ThemeColor;
+  themeMode: ThemeMode;
 };
 
 const initialState: InitialState = {
-  themeColor: "#00EE33",
+  themeColor: GREEN,
+  themeMode: "dark",
 };
 
 const themeSlice = createSlice({
@@ -16,8 +19,11 @@ const themeSlice = createSlice({
     setThemeColor: (state, action: { payload: InitialState["themeColor"] }) => {
       state.themeColor = action.payload;
     },
+    setThemeMode: (state, action: { payload: InitialState["themeMode"] }) => {
+      state.themeMode = action.payload;
+    },
   },
 });
 
-export const { setThemeColor } = themeSlice.actions;
+export const { setThemeColor, setThemeMode } = themeSlice.actions;
 export default themeSlice.reducer;

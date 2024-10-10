@@ -1,101 +1,91 @@
-import { useRef } from "react";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Welcome from "@/components/onboarding/Welcome";
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { galaxyNames } from "@/constants/Galaxy";
-import { useAppRouter } from "@/hooks/useAppRouter";
-import { randomMinMax } from "@/lib/utils/random";
-import {
-  setMeasurement,
-  setSpotlightVisibility,
-} from "@/redux/reducers/onboardingReducer";
+import Hero from "@/components/Hero";
+import CustomSplash from "@/components/CustomSplash";
+import { updateOnboardingStatus } from "@/redux/reducers/onboardingReducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { spotLightTitles } from "@/components/onboarding/Spotlight";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { ThemedText } from "@/components/ThemedText";
+import React, { useState } from "react";
 
 export default function HomeScreen() {
-  const router = useAppRouter();
-  const galaxyIndex = randomMinMax(0, galaxyNames.length - 1);
-  const themeColor = useAppSelector((s) => s.theme.themeColor);
-  const settingRef = useRef<TouchableOpacity>(null!);
+  const onBoardingStatus = useAppSelector((s) => s.onboarding.onBoardingStatus);
   const dispatch = useAppDispatch();
+  const [dimension, setDimension] = useState(0);
+  const halfWidth = dimension / 2;
 
   return (
-    <ThemedView style={styles.parentContainer}>
+    <ThemedView
+      style={styles.parentContainer}
+      onLayout={(event) => {
+        const { width } = event.nativeEvent.layout;
+        setDimension(width);
+      }}
+    >
       <Welcome />
-      <ThemedView style={[styles.heroContainer, { borderColor: themeColor }]}>
-        <ThemedView style={styles.heroInnerContainer}>
-          <Image
-            source={require("@/assets/images/favicon.png")}
-            style={[styles.userImage, { borderColor: themeColor }]}
-          />
-          <ThemedText
-            style={styles.userName}
-          >{`Anonymous ${galaxyNames[galaxyIndex]}`}</ThemedText>
-        </ThemedView>
-        <TouchableOpacity
-          ref={settingRef}
-          style={styles.settings}
-          onLayout={async (event) => {
-            const title = "settings_button";
-            const { width, height, x, y } = event.nativeEvent.layout;
-
-            dispatch(
-              setMeasurement({
-                title,
-                width: width,
-                height: height,
-                left: x,
-                top: y,
-              })
-            );
-            dispatch(setSpotlightVisibility({ isVisible: true, title }));
-          }}
-          onPress={() => router.push("/profile")}
+      <CustomSplash />
+      <Hero />
+      <ThemedView style={{ display: "flex", flexDirection: "row" }}>
+        <ThemedView
+          style={[
+            styles.individualContainer,
+            { backgroundColor: "green", width: halfWidth },
+          ]}
         >
-          <TabBarIcon name="settings" color={themeColor} />
-        </TouchableOpacity>
+          <ThemedText style={styles.heading}>Inactive Spotlights</ThemedText>
+          {spotLightTitles
+            .filter((title) => !onBoardingStatus.includes(title))
+            .map((value) => {
+              return (
+                <TouchableOpacity
+                  key={value}
+                  onPress={() =>
+                    dispatch(updateOnboardingStatus({ value, method: "push" }))
+                  }
+                >
+                  <ThemedText>{value}</ThemedText>
+                </TouchableOpacity>
+              );
+            })}
+        </ThemedView>
+        <ThemedView
+          style={[
+            styles.individualContainer,
+            { backgroundColor: "blue", width: halfWidth },
+          ]}
+        >
+          <ThemedText style={styles.heading}>On Boarding Status:</ThemedText>
+          {onBoardingStatus.map((value) => {
+            return (
+              <TouchableOpacity
+                key={value}
+                onPress={() =>
+                  dispatch(updateOnboardingStatus({ value, method: "delete" }))
+                }
+              >
+                <ThemedText key={value} style={{ textTransform: "capitalize" }}>
+                  {value.replace(/_/g, " ")}
+                </ThemedText>
+              </TouchableOpacity>
+            );
+          })}
+        </ThemedView>
       </ThemedView>
     </ThemedView>
   );
 }
 
-const common = StyleSheet.create({
-  roundContainer: {
-    borderWidth: 2,
-  },
-});
-
 const styles = StyleSheet.create({
+  heading: {
+    fontWeight: 800,
+  },
   parentContainer: {
     height: "100%",
   },
-  heroInnerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heroContainer: {
-    ...common.roundContainer,
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    borderRadius: 12,
-    padding: 12,
-    margin: 12,
-  },
-  userImage: {
-    ...common.roundContainer,
-    borderRadius: 100,
-  },
-  userName: {
-    textTransform: "capitalize",
-  },
-  settings: {
-    alignSelf: "center",
-    padding: 8,
+  individualContainer: {
+    height: 120,
   },
 });
