@@ -1,28 +1,23 @@
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { store } from "@/redux/store";
 import { Provider } from "react-redux";
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import firebase from "@react-native-firebase/app";
+import { STARTING_INDEX } from "@/constants/Numbers";
+import { EMPTY_STRING } from "@/constants/String";
 
 export default function RootLayout() {
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
+  if (firebase.apps.length === STARTING_INDEX) {
+    firebase.initializeApp({
+      apiKey: process.env.API_KEY ?? EMPTY_STRING,
+      databaseURL: `https://${process.env.PROJECT_ID}.firebaseio.com`,
+      projectId: process.env.PROJECT_ID ?? EMPTY_STRING,
+      storageBucket: process.env.STORAGE_BUCKET ?? EMPTY_STRING,
+      messagingSenderId: process.env.MESSAGING_SENDER_ID ?? EMPTY_STRING,
+      appId: process.env.APP_ID ?? EMPTY_STRING,
+      gaTrackingId: process.env.MEASUREMENT_ID ?? EMPTY_STRING,
+    });
   }
 
   return (

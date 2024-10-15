@@ -19,8 +19,6 @@ web-build/
 expo-env.d.ts
 # @end expo-cli
 
-/android
-/ios
 .env
 
 # Generated files from the questions_data_formatter.sh script
@@ -31,3 +29,6 @@ expo-env.d.ts
 **/books/microbiology/10.json
 **/books/microbiology/11.json
 **/books/microbiology/12.json
+
+android.zip
+google-services.json

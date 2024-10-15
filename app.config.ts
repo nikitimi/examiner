@@ -1,7 +1,8 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
 const name = process.env.APPLICATION_NAME ?? "examiner";
-const version = process.env.VERSION ?? "1.0.1";
+const version = process.env.VERSION ?? "1.0.0";
+const flatVersion = process.env.VERSION_IN_APP_CONFIG ?? "1";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -19,22 +20,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   ios: {
     supportsTablet: true,
-    // buildNumber: version,
+    bundleIdentifier: flatVersion,
+    buildNumber: flatVersion,
   },
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.syntexia.examiner",
-    // versionCode: parseFloat(version),
+    package: "com.nikitimi.examiner",
+    versionCode: parseInt(flatVersion, 10),
+    googleServicesFile: `${process.env.GOOGLE_SERVICES_FILE}`,
   },
   web: {
     bundler: "metro",
     output: "static",
     favicon: "./assets/images/favicon.png",
   },
-  plugins: ["expo-router"],
+  plugins: ["expo-router", "@react-native-firebase/app"],
   experiments: {
     typedRoutes: true,
   },

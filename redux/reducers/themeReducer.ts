@@ -1,6 +1,6 @@
 import type { ThemeColor, ThemeMode } from "@/constants/Colors";
 import { createSlice } from "@reduxjs/toolkit";
-import { GREEN } from "@/constants/Colors";
+import { PURPLE } from "@/constants/Colors";
 
 type InitialState = {
   themeColor: ThemeColor;
@@ -8,7 +8,7 @@ type InitialState = {
 };
 
 const initialState: InitialState = {
-  themeColor: GREEN,
+  themeColor: PURPLE,
   themeMode: "dark",
 };
 

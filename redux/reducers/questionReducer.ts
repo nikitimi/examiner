@@ -6,14 +6,21 @@ type BookNames = BookData["displayName"];
 
 type InitialState = {
   bookData: BookData[];
-  currentItemIndex: number;
+  currentTopic: string;
   itemsLimit: number;
   selectedBook: BookNames;
 };
 
 const initialState: InitialState = {
-  bookData: [books.hematology, books.hemostasisAndThrombosis],
-  currentItemIndex: 0,
+  bookData: [
+    books.hematology,
+    books.hemostasisAndThrombosis,
+    books.immunohematology,
+    books.immunology,
+    books.laboratoryOperations,
+    books.microbiology,
+  ],
+  currentTopic: "",
   itemsLimit: 10,
   selectedBook: "hematology",
 };
@@ -25,14 +32,14 @@ const questionSlice = createSlice({
     selectBook: (state, action: { payload: InitialState["selectedBook"] }) => {
       state.selectedBook = action.payload;
     },
-    setCurrentItemIndex: (
+    setCurrentTopic: (
       state,
-      action: { payload: InitialState["currentItemIndex"] }
+      action: { payload: InitialState["currentTopic"] }
     ) => {
-      state.currentItemIndex = action.payload;
+      state.currentTopic = action.payload;
     },
   },
 });
 
-export const { selectBook, setCurrentItemIndex } = questionSlice.actions;
+export const { selectBook, setCurrentTopic } = questionSlice.actions;
 export default questionSlice.reducer;

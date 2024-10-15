@@ -5,12 +5,10 @@ import hemostasis_and_thrombosis4 from "@/lib/books/hemostasis_and_thrombosis/4.
 import hemostasis_and_thrombosis5 from "@/lib/books/hemostasis_and_thrombosis/5.json";
 import type { MultipleChoiceBook } from "@/lib/utils/schema/book";
 
-const hemostasisAndThrombosis = [
+export default [
   hemostasis_and_thrombosis1,
   hemostasis_and_thrombosis2,
   hemostasis_and_thrombosis3,
   hemostasis_and_thrombosis4,
   hemostasis_and_thrombosis5,
 ] as MultipleChoiceBook[];
-
-export default hemostasisAndThrombosis;

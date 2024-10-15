@@ -8,7 +8,7 @@ import hematology7 from "@/lib/books/hematology/7.json";
 import hematology8 from "@/lib/books/hematology/8.json";
 import type { MultipleChoiceBook } from "@/lib/utils/schema/book";
 
-const hematology = [
+export default [
   hematology1,
   hematology2,
   hematology3,
@@ -18,5 +18,3 @@ const hematology = [
   hematology7,
   hematology8,
 ] as MultipleChoiceBook[];
-
-export default hematology;

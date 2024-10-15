@@ -1,138 +1,307 @@
-import { StyleSheet, TouchableOpacity, Modal } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Pressable, Modal, TextInput } from "react-native";
+import React, { useRef, useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
-import { BLACK, ThemeColor, themeColors, WHITE } from "@/constants/Colors";
+import {
+  BLACK,
+  GREEN,
+  RED,
+  ThemeColor,
+  themeColors,
+  WHITE,
+} from "@/constants/Colors";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { ThemedView } from "@/components/ThemedView";
 import { FlatList } from "react-native-gesture-handler";
 import useThemeColor from "@/hooks/useThemeColor";
+import GoogleSigninButton from "@/components/GoogleSignIn";
+import useAuthentication from "@/hooks/useAuthentication";
+import SignoutButton from "@/components/SignoutButton";
+import { EMPTY_STRING } from "@/constants/String";
+import { Ionicons } from "@expo/vector-icons";
+import AppUpdateButton from "@/components/AppUpdateButton";
+import AppVersion from "@/components/AppVersion";
 
 type InitialState = {
   isThemeColorModalVisible: boolean;
+  isContactSupportModalVisible: boolean;
+  report?: (typeof reportTypeList)[number];
 };
 const initialState: InitialState = {
   isThemeColorModalVisible: false,
+  isContactSupportModalVisible: false,
 };
+const reportTypeList = ["bug", "feature_request"] as const;
 
 const Profile = () => {
   const router = useAppRouter();
   const [state, setState] = useState(initialState);
   const { themeColor, themeMode, syncTheme } = useThemeColor();
+  const inputRef = useRef<TextInput>(null);
   const isThemeModeDark = themeMode === "dark";
-  // function login() {}
+  const user = useAuthentication();
+  const dynamicButtonStyle = { borderColor: themeColor };
+  const dynamicTextStyle = { color: themeColor };
+  const finalButtonStyle = [styles.themeButton, dynamicButtonStyle];
+  const finalTextStyle = [styles.text, dynamicTextStyle];
 
-  /** These is for setting the theme colors Modal View. */
-  function toggleThemeColors(state: "close" | "open") {
+  /** These is for setting the Modal Views on or off. */
+  function toggleModal(
+    state: "close" | "open",
+    modal: "themeColor" | "contactSupport"
+  ) {
+    const prefix = "is";
+    const suffix = "ModalVisible";
+    const firstLetter = modal.charAt(0).toLocaleUpperCase();
+    const restOfWords = modal.slice(1, modal.length);
+    const stateName =
+      `${prefix}${firstLetter}${restOfWords}${suffix}` as keyof InitialState;
+
     setState((prevState) => ({
       ...prevState,
-      isThemeColorModalVisible: state === "open" ? true : false,
+      [stateName]: state === "open" ? true : false,
     }));
   }
   function setThemeColor(color: ThemeColor) {
     syncTheme("color", color);
-    toggleThemeColors("close");
+    toggleModal("close", "themeColor");
   }
 
   return (
-    <ParallaxScrollView
-      headerImage={
-        <ThemedView style={styles.headerImageContainer}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.replace("/")}
+    <>
+      <ParallaxScrollView
+        headerImage={
+          <ThemedView style={styles.headerImageContainer}>
+            <Pressable
+              style={styles.backButton}
+              onPress={() => router.replace("/")}
+            >
+              <TabBarIcon name="arrow-back" size={24} color={BLACK} />
+            </Pressable>
+            <ThemedText style={[styles.loginInfo, { color: BLACK }]}>
+              Login to sync your settings, and scoreboard history in the cloud.
+            </ThemedText>
+            {user === null ? <GoogleSigninButton /> : <SignoutButton />}
+          </ThemedView>
+        }
+        headerBackgroundColor={{
+          dark: themeColor,
+          light: BLACK,
+        }}
+      >
+        <ThemedText style={{ fontWeight: "700" }}>Customization:</ThemedText>
+        <Pressable
+          style={finalButtonStyle}
+          onPress={() => toggleModal("open", "themeColor")}
+        >
+          <Ionicons
+            name="color-fill"
+            color={isThemeModeDark ? themeColor : BLACK}
+          />
+          <ThemedText style={finalTextStyle}>Choose theme color</ThemedText>
+        </Pressable>
+        <Pressable
+          style={finalButtonStyle}
+          onPress={() => syncTheme("mode", isThemeModeDark ? "light" : "dark")}
+        >
+          <Ionicons
+            name="toggle"
+            color={isThemeModeDark ? themeColor : BLACK}
+          />
+          <ThemedText style={finalTextStyle}>Toggle theme mode</ThemedText>
+        </Pressable>
+        <Modal
+          visible={state.isThemeColorModalVisible}
+          transparent
+          onRequestClose={() => toggleModal("close", "themeColor")}
+        >
+          <Pressable
+            style={styles.modalButtonContainer}
+            onPress={() => toggleModal("close", "themeColor")}
           >
-            <TabBarIcon name="arrow-back" size={24} color={BLACK} />
-          </TouchableOpacity>
-          <ThemedText style={[styles.loginInfo, { color: BLACK }]}>
-            Login to sync your settings, and scoreboard history in the cloud.
-          </ThemedText>
-          <TouchableOpacity
-            style={[
-              styles.loginButton,
-              {
-                backgroundColor: isThemeModeDark ? BLACK : themeColor,
-              },
-            ]}
-            // onPress={login}
-          >
-            <ThemedText
+            <Pressable
               style={[
-                styles.text,
-                { color: isThemeModeDark ? themeColor : BLACK },
+                styles.modalContainer,
+                {
+                  borderColor: isThemeModeDark ? themeColor : WHITE,
+                  backgroundColor: isThemeModeDark ? BLACK : WHITE,
+                },
               ]}
             >
-              Login
-            </ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-      }
-      headerBackgroundColor={{
-        dark: themeColor,
-        light: BLACK,
-      }}
-    >
-      <ThemedText style={{ fontWeight: "700" }}>Customization:</ThemedText>
-      <TouchableOpacity
-        style={[styles.themeButton, { borderColor: themeColor }]}
-        onPress={() => toggleThemeColors("open")}
-      >
-        <ThemedText style={[styles.text, { color: themeColor }]}>
-          Choose Theme Color
-        </ThemedText>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.themeButton, { borderColor: themeColor }]}
-        onPress={() => syncTheme("mode", isThemeModeDark ? "light" : "dark")}
-      >
-        <ThemedText style={[styles.text, { color: themeColor }]}>
-          Toggle Theme Mode
-        </ThemedText>
-      </TouchableOpacity>
+              <ThemedText style={styles.text}>Accent Color:</ThemedText>
+              <FlatList
+                horizontal
+                contentContainerStyle={styles.modalContentContainer}
+                data={themeColors.filter(
+                  (color) => color !== GREEN && color !== RED
+                )}
+                keyExtractor={(item) => item}
+                renderItem={(color) => {
+                  return (
+                    <Pressable
+                      onPress={() => setThemeColor(color.item)}
+                      style={[
+                        styles.themeColorButton,
+                        {
+                          backgroundColor: color.item,
+                          borderColor: isThemeModeDark ? BLACK : color.item,
+                        },
+                      ]}
+                    />
+                  );
+                }}
+              />
+            </Pressable>
+          </Pressable>
+        </Modal>
 
-      <Modal
-        visible={state.isThemeColorModalVisible}
-        transparent
-        onRequestClose={() => toggleThemeColors("close")}
-      >
-        <TouchableOpacity
-          style={styles.modalButtonContainer}
-          activeOpacity={1}
-          onPress={() => toggleThemeColors("close")}
+        <Pressable
+          style={finalButtonStyle}
+          onPress={() => toggleModal("open", "contactSupport")}
         >
-          <TouchableOpacity
-            activeOpacity={1}
-            style={[
-              styles.modalContainer,
-              {
-                borderColor: themeColor,
-                backgroundColor: isThemeModeDark ? BLACK : WHITE,
-              },
-            ]}
+          <Ionicons
+            name="file-tray-full"
+            color={isThemeModeDark ? themeColor : BLACK}
+          />
+          <ThemedText style={finalTextStyle}>Submit a report</ThemedText>
+        </Pressable>
+        <Modal
+          transparent
+          animationType="fade"
+          visible={state.isContactSupportModalVisible}
+          onRequestClose={() => toggleModal("close", "contactSupport")}
+        >
+          <Pressable
+            style={styles.modalButtonContainer}
+            onPress={() => toggleModal("close", "contactSupport")}
           >
-            <ThemedText style={styles.text}>Accent Color:</ThemedText>
-            <FlatList
-              horizontal
-              contentContainerStyle={styles.modalContentContainer}
-              data={themeColors}
-              keyExtractor={(item) => item}
-              renderItem={(color) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => setThemeColor(color.item)}
-                    style={[
-                      styles.themeColorButton,
-                      { backgroundColor: color.item },
-                    ]}
-                  />
-                );
+            <Pressable
+              style={{
+                backgroundColor: `${isThemeModeDark ? BLACK : themeColor}99`,
+                borderColor: isThemeModeDark ? "transparent" : themeColor,
+                ...common.roundedComponent,
+                padding: 8,
               }}
-            />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
-    </ParallaxScrollView>
+            >
+              <ThemedText>Report type:</ThemedText>
+              <ThemedView
+                style={{
+                  gap: 8,
+                  padding: 2,
+                  flexDirection: "row",
+                  backgroundColor: `${isThemeModeDark ? BLACK : themeColor}99`,
+                }}
+              >
+                {reportTypeList.map((value) => {
+                  return (
+                    <Pressable
+                      style={{
+                        borderColor:
+                          state.report === value
+                            ? isThemeModeDark
+                              ? themeColor
+                              : WHITE
+                            : isThemeModeDark
+                              ? WHITE
+                              : GREEN,
+                        ...common.roundedComponent,
+                      }}
+                      key={value}
+                      onPress={() =>
+                        setState((prevState) => ({
+                          ...prevState,
+                          report: value,
+                        }))
+                      }
+                    >
+                      <ThemedText
+                        style={[
+                          { textTransform: "capitalize" },
+                          {
+                            color:
+                              state.report === value
+                                ? isThemeModeDark
+                                  ? themeColor
+                                  : WHITE
+                                : isThemeModeDark
+                                  ? WHITE
+                                  : GREEN,
+                          },
+                        ]}
+                      >
+                        {value.replace(/_/g, " ")}
+                      </ThemedText>
+                    </Pressable>
+                  );
+                })}
+              </ThemedView>
+              <TextInput
+                ref={inputRef}
+                multiline
+                style={{
+                  borderColor: isThemeModeDark ? "transparent" : themeColor,
+                  backgroundColor: WHITE,
+                  height: 120,
+                  width: 240,
+                  ...common.roundedComponent,
+                }}
+                defaultValue={EMPTY_STRING}
+              />
+              <Pressable
+                disabled={
+                  inputRef.current === null || state.report === undefined
+                }
+                onPress={() => {
+                  const { value } = inputRef.current as unknown as {
+                    value: string;
+                  };
+                  // TODO: Put in database.
+                  console.log({ value, report: state.report });
+                  toggleModal("close", "contactSupport");
+                  setState((prevState) => ({
+                    ...prevState,
+                    report: undefined,
+                  }));
+                }}
+              >
+                <ThemedText
+                  style={{
+                    backgroundColor: GREEN,
+                    ...common.roundedComponent,
+                    width: "100%",
+                    textAlign: "center",
+                    marginHorizontal: "auto",
+                    color: BLACK,
+                    borderColor: isThemeModeDark ? "transparent" : themeColor,
+                  }}
+                >
+                  Send
+                </ThemedText>
+              </Pressable>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      </ParallaxScrollView>
+      <ThemedView
+        style={{
+          position: "absolute",
+          bottom: 12,
+          gap: 4,
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <AppUpdateButton
+          buttonStyle={[finalButtonStyle, { width: 240 }]}
+          color={isThemeModeDark ? themeColor : BLACK}
+          name="cloud-download"
+          textStyle={finalTextStyle}
+        />
+        <AppVersion />
+      </ThemedView>
+    </>
   );
 };
 
@@ -155,6 +324,7 @@ const styles = StyleSheet.create({
   headerImageContainer: {
     backgroundColor: "transparent",
     gap: 24,
+    marginTop: 36,
   },
   loginButton: {
     ...common.roundedComponent,
@@ -162,6 +332,11 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
   },
   themeButton: {
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 18,
+    flexDirection: "row",
+    gap: 6,
     ...common.roundedComponent,
   },
   modalButtonContainer: {
@@ -188,7 +363,8 @@ const styles = StyleSheet.create({
     ...common.roundedComponent,
   },
   text: {
-    textAlign: "center",
+    textAlign: "left",
+    width: "100%",
   },
 });
 

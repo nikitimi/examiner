@@ -1,4 +1,4 @@
-import { TouchableOpacity, Image, StyleSheet } from "react-native";
+import { Pressable, Image, StyleSheet, View } from "react-native";
 import React, { useRef } from "react";
 import { galaxyNames } from "@/constants/Galaxy";
 import { setMeasurement } from "@/redux/reducers/onboardingReducer";
@@ -8,26 +8,52 @@ import { ThemedView } from "./ThemedView";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { useAppSelector, useAppDispatch } from "@/redux/store";
 import useGalaxyIndex from "@/hooks/useGalaxyIndex";
+import useAuthentication from "@/hooks/useAuthentication";
 
 const Hero = () => {
+  const user = useAuthentication();
+  const isUserNull = user === null;
   const router = useAppRouter();
   const galaxyIndex = useGalaxyIndex();
   const themeColor = useAppSelector((s) => s.theme.themeColor);
-  const settingRef = useRef<TouchableOpacity>(null!);
+  const settingRef = useRef<View>(null);
+  const heroRef = useRef<View>(null);
   const dispatch = useAppDispatch();
 
   return (
     <ThemedView style={[styles.heroContainer, { borderColor: themeColor }]}>
-      <ThemedView style={styles.heroInnerContainer}>
+      <View
+        ref={heroRef}
+        style={styles.heroInnerContainer}
+        onLayout={(event) => {
+          const { x, y, width, height } = event.nativeEvent.layout;
+
+          dispatch(
+            setMeasurement({
+              title: "user_info",
+              width: width,
+              height: height,
+              left: x,
+              top: y,
+            })
+          );
+        }}
+      >
         <Image
-          source={require("@/assets/images/favicon.png")}
+          source={
+            isUserNull
+              ? require("@/assets/images/favicon.png")
+              : { uri: user.photoURL }
+          }
           style={[styles.userImage, { borderColor: themeColor }]}
         />
-        <ThemedText
-          style={styles.userName}
-        >{`Anonymous ${galaxyNames[galaxyIndex]}`}</ThemedText>
-      </ThemedView>
-      <TouchableOpacity
+        <ThemedText style={styles.userName}>
+          {isUserNull
+            ? `Anonymous ${galaxyNames[galaxyIndex]}`
+            : user.displayName}
+        </ThemedText>
+      </View>
+      <Pressable
         ref={settingRef}
         style={styles.settings}
         onLayout={async (event) => {
@@ -47,7 +73,7 @@ const Hero = () => {
         onPress={() => router.push("/profile")}
       >
         <TabBarIcon name="settings" color={themeColor} />
-      </TouchableOpacity>
+      </Pressable>
     </ThemedView>
   );
 };
@@ -73,9 +99,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 12,
     margin: 12,
+    marginTop: 36,
   },
   userImage: {
     ...common.roundContainer,
+    height: 48,
+    width: 48,
     borderRadius: 100,
   },
   userName: {

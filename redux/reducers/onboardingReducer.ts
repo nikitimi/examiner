@@ -27,8 +27,8 @@ const initialState: InitialState = {
       height: 0,
       left: 0,
       messages: [
-        "This is where your profile picture resides...",
-        "As well as your display name.",
+        "This is where your profile picture resides, as well as your display name.",
+        "",
       ],
       title: "user_info",
       top: 0,
@@ -81,8 +81,8 @@ const onboardingSlice = createSlice({
         ({ title }) => title === rest.title
       );
       if (spotlight.length === 1) {
-        spotlight[0].top = top;
-        spotlight[0].left = left;
+        spotlight[0].top = top + 5;
+        spotlight[0].left = left + 10;
         spotlight[0].width = width;
         spotlight[0].height = height;
       }

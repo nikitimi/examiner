@@ -14,8 +14,9 @@ const Welcome = () => {
   useEffect(() => {
     // TODO: Set the onboarding Status into the AsyncStorage.
     if (onBoardingStatus.length === spotLightTitles.length) {
+      // Ensure that the spotlight will occur only once.
       onBoardingStatus.forEach((title) =>
-        dispatch(setSpotlightVisibility({ title, isVisible: false }))
+        dispatch(setSpotlightVisibility({ title, isVisible: true }))
       );
     }
   }, [dispatch, onBoardingStatus]);

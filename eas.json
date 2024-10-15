@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 12.5.1",
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   },
   "build": {
     "preview": {
@@ -10,6 +10,9 @@
         "developmentClient": true,
         "distribution": "internal",
         "gradleCommand": ":app:assembleRelease"
+      },
+      "ios": {
+        "simulator": true
       }
     },
     "development": {

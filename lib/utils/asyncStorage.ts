@@ -19,7 +19,7 @@ type ModifyStorageData = {
    */
   method: "get" | "delete" | "keys";
 };
-
+/** Returns the stored value as `string`. */
 export async function storeStorageData<T>(props: StoreStorageData<T>) {
   const { key, value, method } = props;
   const finalValue = typeof value === "string" ? value : JSON.stringify(value);
